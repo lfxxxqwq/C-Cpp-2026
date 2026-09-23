@@ -12,7 +12,7 @@ void hanoi(int n, char from, char to, char aux)
 }
 int main()
 {
-    int n = 3;
+    int n = 64;
     hanoi(n, 'A', 'C','B');
     return 0;
 }
