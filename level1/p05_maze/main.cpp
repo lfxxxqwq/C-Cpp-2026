@@ -18,12 +18,12 @@ void Build_Maze(int n)
 {
     for (int i = 0; i <= n + 1; ++i) {
         for (int j = 0; j <= n + 1; ++j) {
-            Map[i][j] = '*';
+            Map[i][j] = '#';
         }
     }
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
-            Map[i][j] = gen() % 2 ? '*' : '.';
+            Map[i][j] = gen() % 2 ? '#' : '.';
         }
     }
     Player = point(n, 1), END = point(1, n);
@@ -50,7 +50,7 @@ bool Move(point &p)
             case 77: ++p.y; break; // R
             default: return false;
         }
-        if (Map[p.x][p.y] == '*') {
+        if (Map[p.x][p.y] == '#') {
             p = p_copy;
             return false;
         }
@@ -71,7 +71,7 @@ int main()
             } cout << '\n';
         }
         cout << "----------------------\n";
-        cout << ". is the empty land and * is the Wall.\n";
+        cout << ". is the empty land and # is the Wall.\n";
         cout << "P is your position and E is exit.\n";
         if (!Move(Player)) {
             cout << "Please try again.\n";
