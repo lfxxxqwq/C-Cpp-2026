@@ -6,7 +6,7 @@ void read()
     ifstream fin("warehouse.txt");
     if (!fin) return; // empty warehouse at first.
     int n;
-    if (!(fin >> n)) return;
+    if (!(fin >> n)) return; // empty warehouse at first.
     for (int i = 1; i <= n; ++i) {
         string name;
         int cnt;
