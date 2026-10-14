@@ -22,7 +22,7 @@ private:
     vector<unique_ptr<Animal>> animals;
 public:
     void add(unique_ptr<Animal> animal) {
-        if (animals == nullptr) return;
+        if (animals.empty()) return;
         animals.push_back(move(animal));
     }
     void speak() const {
