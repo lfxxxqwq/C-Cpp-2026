@@ -1,9 +1,11 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 bool isp(long long x)
 {
-    if (x == 1) return false;
-    for (int i = 2; i * i <= x; ++i) {
+    if (x <= 1) return false;
+    long long  rt = sqrt(x);
+    for (int i = 2; i <= rt; ++i) {
         if (x % i == 0) {
             return false;
         }
