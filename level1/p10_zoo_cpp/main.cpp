@@ -8,13 +8,13 @@ public:
 class Dog : public Animal {
 public:
     void speak() const override {
-        cout << "Woof!\n";
+        system("Dog.wav");
     }
 };
 class Cat : public Animal {
 public:
     void speak() const override {
-        cout << "Meow~\n";
+        system("Cat.wav");
     }
 };
 class Zoo {
@@ -34,13 +34,13 @@ public:
 class Bird : public Animal {
 public:
     void speak() const override {
-        cout << "Tweet tweet~\n";
+        system("Bird.wav");
     }
 };
 class Wolfdog : public Dog {
 public:
     void speak() const override {
-        cout << "Awooooo~~\n";
+        system("Wolfdog.wav");
     }
 };
 int main() {
