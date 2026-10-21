@@ -39,7 +39,6 @@ int main() {
     }
     for (int i = 0; i < n; ++i) {
         p -> value = a[i];
-        p -> id = i;
         if (i < n - 1) {
             p -> next = new Node();
             p = p -> next;
@@ -47,6 +46,11 @@ int main() {
     }
     print(head), cout << endl;
     head = reverse(head);
+    p = head;
+    for (int i = 0; i < n; ++i) {
+        p -> id = i;
+        p = p -> next;
+    }
     p = find5(head);
     if (p != nullptr) cout << p -> id << endl;
     else cout << -1 << endl;
