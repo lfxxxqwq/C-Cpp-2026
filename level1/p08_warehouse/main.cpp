@@ -31,7 +31,12 @@ int menu()
     cout << "3. take out some ware.\n";
     cout << "4. exit\n";
     string op;
-    cin >> op;
+    if (!(cin >> op)) { // EOF
+        if (cin.eof()) return -2;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return -1;
+    }
     if (op.size() > 1) return -1;
     switch (op[0]) {
         case '1': return 1; break;
@@ -47,6 +52,7 @@ int main() {
         int op = -1;
         do {
             op = menu();
+            if (op == -2) { save(); return 0; } // EOF
         } while (op == -1);
         system("cls");
         string name;
@@ -59,6 +65,7 @@ int main() {
                 break;
             case 2:
                 if (!(cin >> name >> cnt)) {
+                    if (cin.eof()) { save(); return 0; } // EOF
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cout << "invalid input\n";
@@ -70,6 +77,7 @@ int main() {
                 break;
             case 3:
                 if (!(cin >> name >> cnt)) {
+                    if (cin.eof()) { save(); return 0; } // EOF
                     cin.clear();
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cout << "invalid input\n";
@@ -87,7 +95,7 @@ int main() {
             case 4: save(); exit(0);
             default: break;
         }
-        system("pause");
+        if (!cin.eof()) system("pause"); // EOF
     }
     return 0;
 }
