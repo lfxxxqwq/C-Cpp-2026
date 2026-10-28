@@ -3,7 +3,11 @@ void AI_play(int o);
 void player_play(int o) {
     int x, y;
     cin >> x >> y;
-    chess[x][y] = o; // to be done. only to test.
+    if (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] == -1) {
+        cout << "Error. Please play chess again.\n";
+        while (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] == -1) cin >> x >> y;
+    }
+    chess[x][y] = o;
 }
 bool check(int o)
 {
