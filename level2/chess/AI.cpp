@@ -1,5 +1,5 @@
 #include "chess.h"
-constexpr int D = 3;
+constexpr int D = 4;
 struct node {
     int x, y, value;
     node(int a, int b, int c) : x(a), y(b), value(c) {}
@@ -47,8 +47,8 @@ int delta_value(int x, int y, int o, int op) {
     chess[x][y] = -1;
     return delta;
 }
-node dfs(int d, int o, int valueo) {
-    if (valueo >= inf) return node(-1, -1, valueo);
+node dfs(int d, int o, int valueo, int lst) {
+    if (abs(valueo) >= inf) return node(-1, -1, valueo);
     if (d > D) return node(-1, -1, valueo);
     vector<node> vec;
     int op = o ^ (d & 1) ^ 1;
@@ -70,25 +70,29 @@ node dfs(int d, int o, int valueo) {
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
             chess[x][y] = op;
-            final_choice = max(final_choice, node(x, y, dfs(d + 1, o, Value(o)).value));
+            // assert(Value(o) == vec[i].value);
+            final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
             chess[x][y] = -1;
+            // if (final_choice.value >= lst) return final_choice;
         }
         return final_choice;
     } else {
         sort(all(vec));
-        node final_choice = {-1, -1, INT_MAX};
+        node final_choice = node(-1, -1, INT_MAX);
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
             chess[x][y] = op;
-            final_choice = min(final_choice, node(x, y, dfs(d + 1, o, Value(o)).value));
+            // assert(Value(o) == vec[i].value);
+            final_choice = min(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
             chess[x][y] = -1;
+            // if (final_choice.value <= lst) return final_choice;
         }
         return final_choice;
     }
 }
 void AI_play(int o)
 {
-    node ans = dfs(1, o, Value(o));
+    node ans = dfs(1, o, Value(o), INT_MAX);
     cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << '\n';
     chess[ans.x][ans.y] = o;
 }
