@@ -1,0 +1,1 @@
+g++ AI.cpp play.cpp chess.cpp -o game
