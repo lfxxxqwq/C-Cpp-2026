@@ -3,9 +3,9 @@ void AI_play(int o);
 void player_play(int o) {
     int x, y;
     cin >> x >> y;
-    if (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] == -1) {
+    if (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] != -1) {
         cout << "Error. Please play chess again.\n";
-        while (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] == -1) cin >> x >> y;
+        while (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] != -1) cin >> x >> y;
     }
     chess[x][y] = o;
 }
@@ -22,12 +22,12 @@ bool check(int o)
     return false;
 }
 void print_chess() {
-    system("cls");
+    // system("cls");
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
-            if (chess[i][j] == 0) cout << "B";
-            else if (chess[i][j] == 1) cout << "W";
-            else cout << "*";
+            if (chess[i][j] == 0) cout << "X";
+            else if (chess[i][j] == 1) cout << "O";
+            else cout << "_";
         } cout << '\n';
     }
 }
@@ -41,33 +41,39 @@ int main()
     cout << "Who first? 1. AI. 2. player.\n";
     string black, white;
     void (*black_play)(int), (*white_play)(int);
-    int o;
-    cin >> o;
-    if (o == 1) {
-        black = "AI";
-        white = "player";
-        black_play = AI_play;
-        white_play = player_play;
-    } else if (o == 2) {
-        black = "player";
-        white = "AI";
-        black_play = player_play;
-        white_play = AI_play;
-    } else {
-        cout << "Error.\n";
-        return 0;
-    }
+    black = "black";
+    white = "white";
+    black_play = AI_play;
+    white_play = AI_play;
+    // int o;
+    // cin >> o;
+    // if (o == 1) {
+    //     black = "AI";
+    //     white = "player";
+    //     black_play = AI_play;
+    //     white_play = player_play;
+    // } else if (o == 2) {
+    //     black = "player";
+    //     white = "AI";
+    //     black_play = player_play;
+    //     white_play = AI_play;
+    // } else {
+    //     cout << "Error.\n";
+    //     return 0;
+    // }
     print_chess();
     for (int step = 1; step <= n * n; ++step) {
         if (step % 2 == 1) {
             black_play(0);
             if (check(0)) {
+                print_chess();
                 cout << black << " win!\n";
                 return 0;
             }
         } else {
             white_play(1);
             if (check(1)) {
+                print_chess();
                 cout << white << " win!\n";
                 return 0;
             }
