@@ -69,11 +69,14 @@ node dfs(int d, int o, int valueo, int lst) {
         node final_choice = node(-1, -1, INT_MIN);
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
+            if (o == 1 && d == 1) {
+                cerr << "one:" << x << ' ' << y << ' ' << vec[i].value << '\n';
+            }
             chess[x][y] = op;
             // assert(Value(o) == vec[i].value);
             final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
             chess[x][y] = -1;
-            // if (final_choice.value >= lst) return final_choice;
+            if (final_choice.value >= lst) return final_choice;
         }
         return final_choice;
     } else {
@@ -81,11 +84,14 @@ node dfs(int d, int o, int valueo, int lst) {
         node final_choice = node(-1, -1, INT_MAX);
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
+            if (o == 1 && d == 2) {
+                cerr << "two:" << x << ' ' << y << ' ' << vec[i].value << '\n';
+            }
             chess[x][y] = op;
             // assert(Value(o) == vec[i].value);
             final_choice = min(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
             chess[x][y] = -1;
-            // if (final_choice.value <= lst) return final_choice;
+            if (final_choice.value <= lst) return final_choice;
         }
         return final_choice;
     }
@@ -93,6 +99,6 @@ node dfs(int d, int o, int valueo, int lst) {
 void AI_play(int o)
 {
     node ans = dfs(1, o, Value(o), INT_MAX);
-    cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << '\n';
     chess[ans.x][ans.y] = o;
+    cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
 }

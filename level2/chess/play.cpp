@@ -62,7 +62,7 @@ int main()
     //     return 0;
     // }
     print_chess();
-    for (int step = 1; step <= n * n; ++step) {
+    for (int step = 1; step <= 3; ++step) {
         cout << "step: " << step << '\n';
         if (step % 2 == 1) {
             black_play(0);
