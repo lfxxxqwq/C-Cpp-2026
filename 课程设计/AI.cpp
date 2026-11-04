@@ -68,9 +68,6 @@ node dfs(int d, int o, int valueo, int lst) {
         node final_choice = node(-1, -1, INT_MIN);
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
-            // if (o == 1 && d == 1) {
-            //     cerr << "one:" << x << ' ' << y << ' ' << vec[i].value << '\n';
-            // }
             chess[x][y] = op;
             // assert(Value(o) == vec[i].value);
             final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
@@ -83,9 +80,6 @@ node dfs(int d, int o, int valueo, int lst) {
         node final_choice = node(-1, -1, INT_MAX);
         for (int i = 0; i < len; ++i) {
             int x = vec[i].x, y = vec[i].y;
-            // if (o == 1 && d == 2) {
-            //     cerr << "two:" << x << ' ' << y << ' ' << vec[i].value << '\n';
-            // }
             chess[x][y] = op;
             // assert(Value(o) == vec[i].value);
             final_choice = min(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
