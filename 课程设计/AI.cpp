@@ -1,0 +1,103 @@
+#include "chess.h"
+constexpr int D = 4;
+struct node {
+    int x, y, value;
+    node(int a, int b, int c) : x(a), y(b), value(c) {}
+};
+bool operator<(const node& a, const node& b) {
+    return a.value < b.value;
+}
+bool operator>(const node& a, const node& b) {
+    return a.value > b.value;
+}
+int Value(int o) {
+    return valueo(o) - valueo(o ^ 1);
+}
+int delta_value(int x, int y, int o, int op) {
+    auto calc = [&](int o) {
+        int delta = 0;
+        for (int i : {x}) {
+            vector<int>v(n);
+            for (int j = 1; j <= n; ++j) {
+                v[j - 1] = chess[i][j];
+            }
+            delta += valuearray(v, o);
+        }
+        for (int i : {y}) {
+            vector<int>v(n);
+            for (int j = 1; j <= n; ++j) {
+                v[j - 1] = chess[j][i];
+            }
+            delta += valuearray(v, o);
+        }
+        vector<int>v1, v2;
+        for (int i = 1; i <= n; ++i) {
+            if (1 <= x + y - i && x + y - i <= n) v1.emplace_back(chess[i][x + y - i]);
+            if (1 <= i - x + y && i - x + y <= n) v2.emplace_back(chess[i][i - x + y]);
+        }
+        delta += valuearray(v1, o);
+        delta += valuearray(v2, o);
+        return delta;
+    };
+    int delta = 0;
+    delta -= calc(o) - calc(o ^ 1);
+    chess[x][y] = op;
+    delta += calc(o) - calc(o ^ 1);
+    chess[x][y] = -1;
+    return delta;
+}
+node dfs(int d, int o, int valueo, int lst) {
+    if (abs(valueo) >= inf) return node(-1, -1, valueo);
+    if (d > D) return node(-1, -1, valueo);
+    vector<node> vec;
+    int op = o ^ (d & 1) ^ 1;
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (chess[i][j] == -1) {
+                vec.emplace_back(i, j, valueo + delta_value(i, j, o, op));
+                chess[i][j] = op;
+                // assert(vec.back().value == Value(o));
+                chess[i][j] = -1;
+            }
+        }
+    }
+    if (vec.empty()) return node(-1, -1, valueo);
+    int len = min(20, ((int) vec.size() + 2) / 3);
+    if (d % 2 == 1) {
+        sort(all(vec), greater<>());
+        node final_choice = node(-1, -1, INT_MIN);
+        for (int i = 0; i < len; ++i) {
+            int x = vec[i].x, y = vec[i].y;
+            // if (o == 1 && d == 1) {
+            //     cerr << "one:" << x << ' ' << y << ' ' << vec[i].value << '\n';
+            // }
+            chess[x][y] = op;
+            // assert(Value(o) == vec[i].value);
+            final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
+            chess[x][y] = -1;
+            if (final_choice.value >= lst) return final_choice;
+        }
+        return final_choice;
+    } else {
+        sort(all(vec));
+        node final_choice = node(-1, -1, INT_MAX);
+        for (int i = 0; i < len; ++i) {
+            int x = vec[i].x, y = vec[i].y;
+            // if (o == 1 && d == 2) {
+            //     cerr << "two:" << x << ' ' << y << ' ' << vec[i].value << '\n';
+            // }
+            chess[x][y] = op;
+            // assert(Value(o) == vec[i].value);
+            final_choice = min(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
+            chess[x][y] = -1;
+            if (final_choice.value <= lst) return final_choice;
+        }
+        return final_choice;
+    }
+}
+void AI_play(int o)
+{
+    node ans = dfs(1, o, Value(o), INT_MAX);
+    chess[ans.x][ans.y] = o;
+    cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
+}
