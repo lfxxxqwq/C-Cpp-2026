@@ -7,7 +7,7 @@ int valuearray(vector<int>v, int o) {
     while (p < v.size()) {
         int q = p;
         while (q < v.size() && v[q] == o) ++q;
-        int len = q - p, lopen = (p > 0 && v[p - 1] == -1), ropen = (p + 1 < v.size() && v[p + 1] == -1);
+        int len = q - p, lopen = (p > 0 && v[p - 1] == -1), ropen = (q < v.size() && v[q] == -1);
         int open = lopen + ropen;
         if (len >= 5) {
             sum += 100000000;
