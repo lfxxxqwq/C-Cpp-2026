@@ -47,7 +47,7 @@ int delta_value(int x, int y, int o, int op) {
     return delta;
 }
 node dfs(int d, int o, int value_o, int lst) {
-    if (abs(value_o) >= inf) return node(-1, -1, value_o);
+    if (abs(value_o) >= inf) return node(-1, -1, value_o > 0 ? inf : -inf);
     if (d > D) return node(-1, -1, value_o);
     vector<node> vec;
     int op = o ^ (d & 1) ^ 1;

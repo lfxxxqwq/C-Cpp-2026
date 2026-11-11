@@ -13,9 +13,9 @@ int valuearray(vector<int>v, int o) {
             sum += 200000000;
         } else if (len == 4) {
             if (open == 2) {
-                sum += 100000;
+                sum += 1000000;
             } else if (open == 1) {
-                sum += 10000;
+                sum += 100000;
             }
         } else if (len == 3) {
             if (open == 2) {
