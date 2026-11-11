@@ -1,5 +1,5 @@
 #include "chess.h"
-constexpr int D = 4;
+constexpr int D = 5;
 struct node {
     int x, y, value;
     node(int a, int b, int c) : x(a), y(b), value(c) {}
@@ -13,7 +13,6 @@ bool operator>(const node& a, const node& b) {
 int Value(int o) {
     return valueo(o) - valueo(o ^ 1);
 }
-int ste;
 int delta_value(int x, int y, int o, int op) {
     auto calc = [&](int o) {
         int delta = 0;
@@ -71,12 +70,7 @@ node dfs(int d, int o, int value_o, int lst) {
             int x = vec[i].x, y = vec[i].y;
             chess[x][y] = op;
             // assert(Value(o) == vec[i].value);
-            if (ste == 8 && d == 1) {
-                cerr << x << ' ' << y << ' ' << vec[i].value << ' ' << Value(o) << ' ' << valueo(0) << '\n';
-                exit(0);
-            }
-            if (d == 1) final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value + vec[i].value / 100));
-            else final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
+            final_choice = max(final_choice, node(x, y, dfs(d + 1, o, vec[i].value, final_choice.value).value));
             chess[x][y] = -1;
             if (final_choice.value >= lst) return final_choice;
         }
@@ -97,8 +91,8 @@ node dfs(int d, int o, int value_o, int lst) {
 }
 void AI_play(int o, int step)
 {
-    ste = step;
     node ans = step == 1 ? node((n + 1) / 2, (n + 1) / 2, 0) : dfs(1, o, Value(o), INT_MAX);
     chess[ans.x][ans.y] = o;
     cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
+    cerr << valueo(o) << ' ' << valueo(o ^ 1) << endl;
 }

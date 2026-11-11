@@ -30,35 +30,29 @@ void init()
 int main()
 {
     init();
-    // vector<int>v(15);
-    // v[0] = v[1] = v[2] = -1, v[3] = 1;
-    // v[4] = v[5] = v[6] = v[7] = 0;
-    // v[8] = v[9] = v[10] = v[11] = v[12] = v[13] = v[14] = -1;
-    // cout << valuearray(v, 0) << '\n';
-    // return 0;
     cout << "Who first? 1. AI. 2. player.\n";
     string black, white;
     void (*black_play)(int, int), (*white_play)(int, int);
-    // black = "black";
-    // white = "white";
-    // black_play = AI_play;
-    // white_play = AI_play;
-    int o;
-    cin >> o;
-    if (o == 1) {
-        black = "AI";
-        white = "player";
-        black_play = AI_play;
-        white_play = player_play;
-    } else if (o == 2) {
-        black = "player";
-        white = "AI";
-        black_play = player_play;
-        white_play = AI_play;
-    } else {
-        cout << "Error.\n";
-        return 0;
-    }
+    black = "black";
+    white = "white";
+    black_play = AI_play;
+    white_play = AI_play;
+    // int o;
+    // cin >> o;
+    // if (o == 1) {
+    //     black = "AI";
+    //     white = "player";
+    //     black_play = AI_play;
+    //     white_play = player_play;
+    // } else if (o == 2) {
+    //     black = "player";
+    //     white = "AI";
+    //     black_play = player_play;
+    //     white_play = AI_play;
+    // } else {
+    //     cout << "Error.\n";
+    //     return 0;
+    // }
     print_chess(); // remeber to open it.
     for (int step = 1; step <= n * n; ++step) {
         cout << "step: " << step << '\n';

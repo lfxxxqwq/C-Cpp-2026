@@ -10,7 +10,7 @@ int valuearray(vector<int>v, int o) {
         int len = q - p, lopen = (p > 0 && v[p - 1] == -1), ropen = (q < v.size() && v[q] == -1);
         int open = lopen + ropen;
         if (len >= 5) {
-            sum += 100000000;
+            sum += 200000000;
         } else if (len == 4) {
             if (open == 2) {
                 sum += 100000;
