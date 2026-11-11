@@ -9,11 +9,11 @@
 void AI_play(int, int);
 
 // ==================== GUI 配置 ====================
-static const int CELL      = 40;                       // 一格像素
-static const int MARGIN    = 35;                       // 棋盘边距
+static const int CELL      = 40;
+static const int MARGIN    = 35;
 static const int BOARD_PX  = CELL * (n - 1);
 static const int WIN_W     = BOARD_PX + MARGIN * 2;
-static const int WIN_H     = BOARD_PX + MARGIN * 2 + 40;   // 底部状态栏 40px
+static const int WIN_H     = BOARD_PX + MARGIN * 2 + 40;
 
 static const COLORREF COL_BG     = RGB(232, 192, 140);
 static const COLORREF COL_LINE   = RGB(90, 50, 20);
@@ -37,13 +37,11 @@ static int row_of_py(int py) { return (int)lround((double)(py - MARGIN) / CELL) 
 
 // ==================== 绘制棋盘 ====================
 static void draw_board(HDC hdc, int W, int H) {
-    // 背景
     HBRUSH bg = CreateSolidBrush(COL_BG);
     RECT rc = {0, 0, W, H};
     FillRect(hdc, &rc, bg);
     DeleteObject(bg);
 
-    // 内网格线（细）
     HPEN line = CreatePen(PS_SOLID, 1, COL_LINE);
     HPEN oldPen = (HPEN)SelectObject(hdc, line);
     for (int k = 1; k <= n; ++k) {
@@ -55,7 +53,6 @@ static void draw_board(HDC hdc, int W, int H) {
     SelectObject(hdc, oldPen);
     DeleteObject(line);
 
-    // 外框（只描边，不能填充，否则会盖住网格线）
     HPEN border = CreatePen(PS_SOLID, 3, COL_LINE);
     oldPen = (HPEN)SelectObject(hdc, border);
     HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, GetStockObject(NULL_BRUSH));
@@ -65,7 +62,6 @@ static void draw_board(HDC hdc, int W, int H) {
     SelectObject(hdc, oldBrush);
     DeleteObject(border);
 
-    // 星位
     HBRUSH starBrush = CreateSolidBrush(COL_LINE);
     oldBrush = (HBRUSH)SelectObject(hdc, starBrush);
     int stars[][2] = {{4,4},{4,12},{12,4},{12,12},{8,8}};
@@ -76,7 +72,6 @@ static void draw_board(HDC hdc, int W, int H) {
     SelectObject(hdc, oldBrush);
     DeleteObject(starBrush);
 
-    // 棋子
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
             if (chess[i][j] == -1) continue;
@@ -95,7 +90,7 @@ static void draw_board(HDC hdc, int W, int H) {
         }
     }
 
-    // 最后一步红圈高亮
+    // 标记最后一步（玩家和 AI 都会标记）
     if (g_last_x != -1) {
         int cx = px_of_col(g_last_y), cy = py_of_row(g_last_x);
         HPEN rp = CreatePen(PS_SOLID, 2, COL_LAST);
@@ -142,8 +137,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         if (i < 1 || i > n || j < 1 || j > n) return 0;
         int cx = px_of_col(j), cy = py_of_row(i);
         int dx = px - cx, dy = py - cy;
-        if (dx * dx + dy * dy > (CELL / 2) * (CELL / 2)) return 0;   // 离交叉点太远
-        if (chess[i][j] != -1) return 0;                             // 已有子
+        if (dx * dx + dy * dy > (CELL / 2) * (CELL / 2)) return 0;
+        if (chess[i][j] != -1) return 0;
         g_click_x = i;
         g_click_y = j;
         return 0;
@@ -217,8 +212,6 @@ void player_play(int o, int step) {
 
     g_player_turn = false;
     chess[g_click_x][g_click_y] = o;
-    g_last_x = g_click_x;
-    g_last_y = g_click_y;
 }
 
 bool check(int o) {
@@ -227,6 +220,25 @@ bool check(int o) {
 
 void init() {
     memset(chess, -1, sizeof chess);
+}
+
+// ==================== 自动扫描更新最后落子 ====================
+static int old_chess[n + 1][n + 1];
+
+static void play_one_move(int o, int step, void (*play_func)(int, int)) {
+    memcpy(old_chess, chess, sizeof chess);
+    play_func(o, step); // 执行下棋（玩家或 AI）
+
+    // 对比前后棋盘，自动找到最新下的那一颗棋
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (old_chess[i][j] != chess[i][j]) {
+                g_last_x = i;
+                g_last_y = j;
+                return;
+            }
+        }
+    }
 }
 
 // ==================== main ====================
@@ -257,7 +269,7 @@ int main() {
                 g_status = "AI is thinking...";
                 print_chess();
             }
-            black_play(0, step);
+            play_one_move(0, step, black_play);
             if (check(0)) {
                 g_status = black + " wins!";
                 print_chess();
@@ -269,7 +281,7 @@ int main() {
                 g_status = "AI is thinking...";
                 print_chess();
             }
-            white_play(1, step);
+            play_one_move(1, step, white_play);
             if (check(1)) {
                 g_status = white + " wins!";
                 print_chess();
