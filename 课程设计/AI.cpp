@@ -104,8 +104,9 @@ node dfs(int d, int o, int value_o, int lst) {
 }
 void AI_play(int o, int step)
 {
+    cout << "AI is thinking..." << endl;
     node ans = step == 1 ? node((n + 1) / 2, (n + 1) / 2, 0) : dfs(1, o, Value(o), INT_MAX);
     chess[ans.x][ans.y] = o;
-    cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
-    cerr << valueo(o) << ' ' << valueo(o ^ 1) << endl;
+    // cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
+    // cerr << valueo(o) << ' ' << valueo(o ^ 1) << endl;
 }

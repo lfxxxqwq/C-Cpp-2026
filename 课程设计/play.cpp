@@ -14,7 +14,7 @@ bool check(int o)
     return valueo(o) >= inf;
 }
 void print_chess() {
-    // system("cls");
+    system("cls");
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
             if (chess[i][j] == 0) cout << "X";
@@ -33,26 +33,26 @@ int main()
     cout << "Who first? 1. AI. 2. player.\n";
     string black, white;
     void (*black_play)(int, int), (*white_play)(int, int);
-    black = "black";
-    white = "white";
-    black_play = AI_play;
-    white_play = AI_play;
-    // int o;
-    // cin >> o;
-    // if (o == 1) {
-    //     black = "AI";
-    //     white = "player";
-    //     black_play = AI_play;
-    //     white_play = player_play;
-    // } else if (o == 2) {
-    //     black = "player";
-    //     white = "AI";
-    //     black_play = player_play;
-    //     white_play = AI_play;
-    // } else {
-    //     cout << "Error.\n";
-    //     return 0;
-    // }
+    // black = "black";
+    // white = "white";
+    // black_play = AI_play;
+    // white_play = AI_play;
+    int o;
+    cin >> o;
+    if (o == 1) {
+        black = "AI";
+        white = "player";
+        black_play = AI_play;
+        white_play = player_play;
+    } else if (o == 2) {
+        black = "player";
+        white = "AI";
+        black_play = player_play;
+        white_play = AI_play;
+    } else {
+        cout << "Error.\n";
+        return 0;
+    }
     print_chess(); // remeber to open it.
     for (int step = 1; step <= n * n; ++step) {
         cout << "step: " << step << '\n';
