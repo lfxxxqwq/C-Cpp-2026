@@ -1,16 +1,46 @@
 #include "chess.h"
+#undef n
+#define byte byte_
+#include <windows.h>
+#undef byte
+#define n (15)
 void AI_play(int, int);
 void player_play(int o, int step) {
+    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+
+    // 每次进入都重新开启鼠标输入，因为 print_chess 里的 system("cls")
+    // 启动的 cmd 会重置控制台输入模式
+    DWORD mode;
+    GetConsoleMode(hIn, &mode);
+    mode &= ~ENABLE_QUICK_EDIT_MODE;
+    mode |= ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT;
+    SetConsoleMode(hIn, mode);
+
     int x, y;
-    cin >> x >> y;
-    if (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] != -1) {
-        cout << "Error. Please play chess again.\n";
-        while (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] != -1) cin >> x >> y;
+    while (true) {
+        INPUT_RECORD ir;
+        DWORD cnt = 0;
+        ReadConsoleInput(hIn, &ir, 1, &cnt);
+
+        if (ir.EventType != MOUSE_EVENT) continue;
+
+        MOUSE_EVENT_RECORD &m = ir.Event.MouseEvent;
+        if (m.dwEventFlags != 0) continue;                            // 只处理按下/抬起瞬间
+        if (!(m.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)) continue; // 只处理左键
+
+        // print_chess 第 0 行就是棋盘第 1 行，每格单字符
+        x = m.dwMousePosition.Y + 1;
+        y = m.dwMousePosition.X + 1;
+
+        if (!((1 <= x && x <= n) && (1 <= y && y <= n))) continue;  // 点在棋盘外
+        if (chess[x][y] != -1) continue;                             // 已有棋子，重等
+
+        break;
     }
+
     chess[x][y] = o;
 }
-bool check(int o)
-{
+bool check(int o) {
     return valueo(o) >= inf;
 }
 void print_chess() {
@@ -23,8 +53,7 @@ void print_chess() {
         } cout << '\n';
     }
 }
-void init()
-{
+void init() {
     memset(chess, -1, sizeof chess);
 }
 int main()
