@@ -1,5 +1,5 @@
 #include "chess.h"
-constexpr int D = 5;
+constexpr int D = 6;
 struct node {
     int x, y, value;
     node(int a, int b, int c) : x(a), y(b), value(c) {}
@@ -17,16 +17,18 @@ int delta_value(int x, int y, int o, int op) {
     auto calc = [&](int o) {
         int delta = 0;
         for (int i : {x}) {
-            vector<int>v(n);
-            for (int j = max(1, y - 5); j <= min(n, y + 5); ++j) {
-                v[j - 1] = chess[i][j];
+            int l = max(1, y - 5), r = min(n, y + 5);
+            vector<int>v(r - l + 1);
+            for (int j = l; j <= r; ++j) {
+                v[j - l] = chess[i][j];
             }
             delta += valuearray(v, o);
         }
         for (int i : {y}) {
-            vector<int>v(n);
-            for (int j = max(1, x - 5); j <= min(n, x + 5); ++j) {
-                v[j - 1] = chess[j][i];
+            int l = max(1, x - 5), r = min(n, x + 5);
+            vector<int>v(r - l + 1);
+            for (int j = l; j <= r; ++j) {
+                v[j - l] = chess[j][i];
             }
             delta += valuearray(v, o);
         }
@@ -50,10 +52,21 @@ node dfs(int d, int o, int value_o, int lst) {
     if (abs(value_o) >= inf) return node(-1, -1, value_o > 0 ? inf : -inf);
     if (d > D) return node(-1, -1, value_o);
     vector<node> vec;
+    auto ok = [](int x, int y) {
+        for (int i = max(1, x - 2); i <= min(n, x + 2); ++i) {
+            for (int j = max(1, y - 2); j <= min(n, y + 2); ++j) {
+                if (chess[i][j] != -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
     int op = o ^ (d & 1) ^ 1;
     for (int i = 1; i <= n; ++i) {
         for (int j = 1; j <= n; ++j) {
             if (chess[i][j] == -1) {
+                if (!ok(i, j)) continue;
                 vec.emplace_back(i, j, value_o + delta_value(i, j, o, op));
                 chess[i][j] = op;
                 // assert(vec.back().value == Value(o));
@@ -62,7 +75,7 @@ node dfs(int d, int o, int value_o, int lst) {
         }
     }
     if (vec.empty()) return node(-1, -1, value_o);
-    int len = min(20, ((int) vec.size() + 2) / 3);
+    int len = min(50, (int) (vec.size() + 1) / 2);
     if (d % 2 == 1) {
         sort(all(vec), greater<>());
         node final_choice = node(-1, -1, INT_MIN);
