@@ -69,3 +69,15 @@ int valueo(int o) {
     }
     return value;
 }
+void playo(int x, int y, int o) {
+    chess[x][y] = o;
+     if (o == 0) {
+         setcolor(BLACK);
+         setfillcolor(BLACK);
+         fillcircle(X / (n + 1) * x, Y / (n + 1) * y, 12);
+     } else if (o == 1) {
+         setcolor(BLACK);
+         setfillcolor(WHITE);
+         fillcircle(X / (n + 1) * x, Y / (n + 1) * y, 12);
+     }
+}

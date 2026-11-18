@@ -1,3 +1,5 @@
+#include <easyx.h>
+
 #include "chess.h"
 constexpr int D = 6;
 struct node {
@@ -104,9 +106,15 @@ node dfs(int d, int o, int value_o, int lst) {
 }
 void AI_play(int o, int step)
 {
-    cout << "AI is thinking..." << endl;
+    setbkmode(TRANSPARENT);
+    settextstyle(20, 0, "SimHei");
+    setcolor(RGB(107, 79, 42));
+    outtextxy(50, 500, "AI is thinking.");
     node ans = step == 1 ? node((n + 1) / 2, (n + 1) / 2, 0) : dfs(1, o, Value(o), INT_MAX);
-    chess[ans.x][ans.y] = o;
+    // chess[ans.x][ans.y] = o;
+    playo(ans.x, ans.y, o);
+    setfillcolor(RGB(233, 205, 150));
+    solidrectangle(50, 500, 200, 520);
     // cerr << "AI:" << ans.x << ' ' << ans.y << ' ' << ans.value << ' ' << Value(o) << "<-val\n";
     // cerr << valueo(o) << ' ' << valueo(o ^ 1) << endl;
 }
