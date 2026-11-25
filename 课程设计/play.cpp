@@ -18,14 +18,11 @@ bool mouse_get(int &x, int &y) {
 }
 void player_play(int o, int step) {
     int x, y;
-    // cin >> x >> y;
-    // if (!((1 <= x && x <= n) && (1 <= y && y <= n)) || chess[x][y] != -1) {
     if (!mouse_get(x, y)) {
         cout << "Error. Please play chess again.\n";
         while (!mouse_get(x, y)) cin >> x >> y;
     }
     playo(x, y, o);
-    // chess[x][y] = o;
 }
 bool check(int o) {
     return valueo(o) >= inf;
@@ -66,10 +63,6 @@ int main()
     init();
     string black, white;
     void (*black_play)(int, int), (*white_play)(int, int);
-    // black = "black";
-    // white = "white";
-    // black_play = AI_play;
-    // white_play = AI_play;
     int ret = MessageBoxW(NULL,
         L"请选择先手：\n是 = AI 先手，否 = 玩家先手",
         L"选择先手",

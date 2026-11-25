@@ -3,7 +3,6 @@ int chess[n + 1][n + 1];
 // black first (0), white second (1).
 int valuearray(vector<int>v, int o) {
     int p = 0, sum = 0;
-    // for (int x : v) cerr << x << ' '; cerr << '\n';
     while (p < v.size()) {
         int q = p;
         while (q < v.size() && v[q] == o) ++q;
