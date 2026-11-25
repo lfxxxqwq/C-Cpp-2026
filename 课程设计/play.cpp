@@ -4,7 +4,9 @@ void AI_play(int, int);
 bool mouse_get(int &x, int &y) {
     auto sqr = [](int x) {return x * x;};
     while (true) {
-        ExMessage m = getmessage(EM_MOUSE);
+        if (!IsWindow(GetHWnd())) exit(0);
+        ExMessage m;
+        if (!peekmessage(&m, EM_MOUSE)) { Sleep(10); continue; }
         if (m.message != WM_LBUTTONDOWN) continue;
         int lx = m.x - 50;
         int ly = m.y - 50;
@@ -52,11 +54,7 @@ void init() {
     }
 }
 void holdWindow() {
-    ExMessage msg;
-    while (true) {
-        msg = getmessage(EM_WINDOW);
-        if (msg.message == WM_CLOSE) break;
-    }
+    while (IsWindow(GetHWnd())) Sleep(50);
 }
 int main()
 {
