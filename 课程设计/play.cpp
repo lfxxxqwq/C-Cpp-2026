@@ -21,8 +21,13 @@ bool mouse_get(int &x, int &y) {
 void player_play(int o, int step) {
     int x, y;
     if (!mouse_get(x, y)) {
-        cout << "Error. Please play chess again.\n";
+        setbkmode(TRANSPARENT);
+        settextstyle(20, 0, "SimHei");
+        setcolor(RGB(107, 79, 42));
+        outtextxy(50, 500, "Error. Please play chess again.");
         while (!mouse_get(x, y)) cin >> x >> y;
+        setfillcolor(RGB(233, 205, 150));
+        solidrectangle(50, 500, 200, 520);
     }
     playo(x, y, o);
 }
